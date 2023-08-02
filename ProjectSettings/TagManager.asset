@@ -11,9 +11,9 @@ TagManager:
   - whatIsGround
   - Water
   - UI
-  - 
-  - 
-  - 
+  - Player
+  - whatIsWall
+  - whatIsGrappleable
   - 
   - 
   - 
