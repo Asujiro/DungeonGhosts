@@ -116,8 +116,6 @@ public class FreeFlyCamera : MonoBehaviour
     {   
         camRotationControl.action.Enable();
         movementControl.action.Enable();
-        if (_active)
-            _wantedMode = CursorLockMode.Locked;
         
     }
     
@@ -164,42 +162,58 @@ public class FreeFlyCamera : MonoBehaviour
         SetCursorState();
 
         // Translation
-        if (_enableTranslation)
+        /*if (_enableTranslation)
         {
             transform.Translate(Vector3.forward * Input.mouseScrollDelta.y * Time.deltaTime * _translationSpeed);
-        }
+        }*/
 
         // Movement
-        Vector3 deltaPosition = Vector3.zero;
-            float currentSpeed = _movementSpeed;
-
-            if (Input.GetKey(_boostSpeed))
-                currentSpeed = _boostedSpeed;
-            
-            movement = movementControl.action.ReadValue<Vector2>();
-            horizontalInput = movement.x;
-            verticalInput = movement.y;
-            
-            moveDirection = transform.forward * verticalInput + transform.right * horizontalInput;
-            
-           
-            // Calc acceleration
-            CalculateCurrentIncrease(moveDirection != Vector3.zero);
-
-            if (moveDirection != Vector3.zero)
-            {
-                lockMouse = true;
-            }
-            else
-            {
-                lockMouse = false;
-            }
-            
-            
-            transform.position += moveDirection * currentSpeed * _currentIncrease;
+            CamMovement();
         
 
         // Rotation
+            CamRotation();
+
+        // Return to init position
+        if (Input.GetKeyDown(_initPositonButton))
+        {
+            transform.position = _initPosition;
+            transform.eulerAngles = _initRotation;
+        }
+    }
+
+    private void CamMovement()
+    {
+        float currentSpeed = _movementSpeed;
+
+        if (Input.GetKey(_boostSpeed))
+            currentSpeed = _boostedSpeed;
+            
+        movement = movementControl.action.ReadValue<Vector2>();
+        horizontalInput = movement.x;
+        verticalInput = movement.y;
+            
+        moveDirection = transform.forward * verticalInput + transform.right * horizontalInput;
+            
+           
+        // Calc acceleration
+        CalculateCurrentIncrease(moveDirection != Vector3.zero);
+
+        if (moveDirection != Vector3.zero)
+        {
+            lockMouse = true;
+        }
+        else
+        {
+            lockMouse = false;
+        }
+            
+            
+        transform.position += moveDirection * currentSpeed * _currentIncrease;
+    }
+
+    private void CamRotation()
+    {
         if (lockMouse || camRotationControl.action.inProgress)
         {
             // Pitch
@@ -214,13 +228,6 @@ public class FreeFlyCamera : MonoBehaviour
                 transform.eulerAngles.y + Input.GetAxis("Mouse X") * _mouseSense,
                 transform.eulerAngles.z
             );
-        }
-
-        // Return to init position
-        if (Input.GetKeyDown(_initPositonButton))
-        {
-            transform.position = _initPosition;
-            transform.eulerAngles = _initRotation;
         }
     }
 }

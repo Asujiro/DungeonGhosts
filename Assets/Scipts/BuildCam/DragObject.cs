@@ -4,78 +4,118 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 public class DragObject : MonoBehaviour
 {
-    private Vector3 mOffset;
-    private float mZCoord;
-    bool isColliding = false;
-    bool mouseDragging = false;
-
-
-
-    void OnMouseDown()
-
+    [Header("Input")]
+    [SerializeField] private InputAction mouseClick;
+    [SerializeField] private InputAction mouseWheelDown;
+    [SerializeField] private InputAction mouseWheelUp;
+    [SerializeField] private InputAction rotateRight;
+    [SerializeField] private InputAction rotateUp;
+    [SerializeField] private InputAction mouseControl;
+    private Camera mainCamera;
+    private WaitForFixedUpdate waitForFixedUpdate;
+    private Vector3 rotation;
+    private Vector2 lastCursorPos;
+    
+    [Header("Values")]
+    [SerializeField]private float mouseDragSpeed = 10f;
+    [SerializeField] private float rotSpeed = 10f;
+    private void Awake()
     {
-        mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
-        
-        // Store offset = gameobject world pos - mouse world pos
-        mOffset = gameObject.transform.position - GetMouseAsWorldPoint();
+        mainCamera = Camera.main;
     }
 
-
-
-    private Vector3 GetMouseAsWorldPoint()
+    private void OnEnable()
     {
-        // Pixel coordinates of mouse (x,y)
-        Vector3 mousePoint = Input.mousePosition;
-        
-        // z coordinate of game object on screen
-        mousePoint.z = mZCoord;
-        
-        // Convert it to world points
-        return Camera.main.ScreenToWorldPoint(mousePoint);
-
+        rotateUp.Enable();
+        mouseWheelUp.Enable();
+        mouseWheelDown.Enable();
+        mouseClick.Enable();
+        mouseControl.Enable();
+        rotateRight.Enable();
+        mouseClick.performed += MousePressed;
     }
 
-
-
-
-
-    void OnMouseDrag()
+    private void OnDisable()
     {
-        mouseDragging = true;
-        if (!isColliding)
+        rotateUp.Disable();
+        mouseControl.Disable();
+        mouseWheelUp.Disable();
+        mouseWheelDown.Disable();
+        mouseClick.Disable();
+        rotateRight.Disable();
+        mouseClick.performed -= MousePressed;
+    }
+
+    private void Update()
+    {
+        
+        LastCursorPosition();
+    }
+
+    private void MousePressed(InputAction.CallbackContext obj)
+    {
+        Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
         {
-            transform.position = GetMouseAsWorldPoint() + mOffset;
+            if (hit.collider != null && hit.collider.gameObject.CompareTag("Draggable"))
+            {
+                StartCoroutine(DragUpdate(hit.collider.gameObject));
+            }
         }
     }
 
-
-
-    private void OnCollisionEnter(Collision collision)
+    private IEnumerator DragUpdate(GameObject clickedObject)
     {
-        if (mouseDragging)
+        float initialDistance = Vector3.Distance(clickedObject.transform.position, mainCamera.transform.position);
+        clickedObject.TryGetComponent<Rigidbody>(out var rb);
+        while (mouseClick.ReadValue<float>() != 0)
         {
-            isColliding = true;
+            Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+            if (rb != null)
+            {
+                Vector3 direction = ray.GetPoint(initialDistance) - clickedObject.transform.position;
+                rb.velocity = direction * mouseDragSpeed;
+                yield return waitForFixedUpdate;
+            }
+            
+            if (mouseWheelDown.triggered)
+            {
+                initialDistance = Vector3.Distance(clickedObject.transform.position - new Vector3(0, 0, 1f),
+                    mainCamera.transform.position);
+            }
+
+            else if (mouseWheelUp.triggered)
+            {
+                initialDistance = Vector3.Distance(clickedObject.transform.position + new Vector3(0, 0, 1f),
+                    mainCamera.transform.position);
+            }
+            else if (rotateRight.ReadValue<float>() != 0)
+            {     
+                    CursorControl.SetPosition(lastCursorPos);
+                    float rotSpeed = 20f;
+                    
+                    float rotx = Input.GetAxis ("Mouse X") * rotSpeed * Mathf.Deg2Rad;
+                    float roty = Input.GetAxis ("Mouse Y") * rotSpeed * Mathf.Deg2Rad;
+                    clickedObject.transform.RotateAround(Vector3.up, -rotx);
+                    clickedObject.transform.RotateAround(Vector3.right, roty);
+            }
         }
     }
 
-    private void OnCollisionExit(Collision collision)
+    private void LastCursorPosition()
     {
-        isColliding = false;
+        if (rotateRight.triggered)
+        {
+            lastCursorPos = CursorControl.GetPosition();
+        }
     }
-
-
-
-    private void OnMouseUp()
-
-    {
-
-        mouseDragging = false;
-
-        isColliding = false;
-
-    }
+    
+    
 
 }
