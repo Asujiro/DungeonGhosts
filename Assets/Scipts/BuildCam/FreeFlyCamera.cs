@@ -10,74 +10,25 @@ using UnityEngine.InputSystem;
 public class FreeFlyCamera : MonoBehaviour
 {
     #region UI
+    
+    [SerializeField] private float _mouseSense = 1.8f;
+    
 
-    [Space]
+    [SerializeField] private float _movementSpeed = 10f;
 
-    [SerializeField]
-    [Tooltip("The script is currently active")]
-    private bool _active = true;
+    [SerializeField] private float _boostedSpeed = 50f;
 
-    [Space]
+    [SerializeField] private KeyCode _boostSpeed = KeyCode.LeftShift;
 
-    [SerializeField]
-    [Tooltip("Camera rotation by mouse movement is active")]
-    private bool _enableRotation = true;
+    [SerializeField] private KeyCode _moveUp = KeyCode.E;
 
-    [SerializeField]
-    [Tooltip("Sensitivity of mouse rotation")]
-    private float _mouseSense = 1.8f;
+    [SerializeField] private KeyCode _moveDown = KeyCode.Q;
+    
+    [SerializeField] private bool _enableSpeedAcceleration = true;
 
-    [Space]
+    [SerializeField] private float _speedAccelerationFactor = 1.5f;
 
-    [SerializeField]
-    [Tooltip("Camera zooming in/out by 'Mouse Scroll Wheel' is active")]
-    private bool _enableTranslation = true;
-
-    [SerializeField]
-    [Tooltip("Velocity of camera zooming in/out")]
-    private float _translationSpeed = 55f;
-
-    [Space]
-
-    [SerializeField]
-    [Tooltip("Camera movement by 'W','A','S','D','Q','E' keys is active")]
-    private bool _enableMovement = true;
-
-    [SerializeField]
-    [Tooltip("Camera movement speed")]
-    private float _movementSpeed = 10f;
-
-    [SerializeField]
-    [Tooltip("Speed of the quick camera movement when holding the 'Left Shift' key")]
-    private float _boostedSpeed = 50f;
-
-    [SerializeField]
-    [Tooltip("Boost speed")]
-    private KeyCode _boostSpeed = KeyCode.LeftShift;
-
-    [SerializeField]
-    [Tooltip("Move up")]
-    private KeyCode _moveUp = KeyCode.E;
-
-    [SerializeField]
-    [Tooltip("Move down")]
-    private KeyCode _moveDown = KeyCode.Q;
-
-    [Space]
-
-    [SerializeField]
-    [Tooltip("Acceleration at camera movement is active")]
-    private bool _enableSpeedAcceleration = true;
-
-    [SerializeField]
-    [Tooltip("Rate which is applied during camera movement")]
-    private float _speedAccelerationFactor = 1.5f;
-
-    [Space]
-
-    [SerializeField]
-    [Tooltip("This keypress will move the camera to initialization position")]
-    private KeyCode _initPositonButton = KeyCode.R;
+    [SerializeField] private KeyCode _initPositonButton = KeyCode.R;
 
     #endregion UI
 
