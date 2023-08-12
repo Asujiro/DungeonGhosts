@@ -10,6 +10,7 @@ public class SwitchCams : MonoBehaviour
     [SerializeField] private GameObject spawnPoint;
     [SerializeField] private GameObject buildCam;
     // Start is called before the first frame update
+    [SerializeField] private Timer timer;
     [SerializeField] private GameObject dragManager;
     [SerializeField] private InputAction input;
     private GameObject spawnedPlayer;
@@ -30,9 +31,11 @@ public class SwitchCams : MonoBehaviour
     {
         if (buildCam.activeSelf)
         {
+            timer.StartTimer();
             buildCam.SetActive(false);
             spawnedPlayer = Instantiate(playerPrefab, spawnPoint.transform.position, Quaternion.identity);
             dragManager.SetActive(false);
+            timer.StartTimer();
             
         }
         else
@@ -40,6 +43,8 @@ public class SwitchCams : MonoBehaviour
             Destroy(spawnedPlayer);
             buildCam.SetActive(true);
             dragManager.SetActive(true);
+            timer.StopTimer();
+            timer.ResetTimer();
         }
     }
 

@@ -154,22 +154,38 @@ public class Swinging : MonoBehaviour
         // shorten cable
         if (shortenCableControl.action.inProgress)
         {
-            Vector3 directionPoint = swingPoint - transform.position;
-            rb.AddForce(directionPoint.normalized * (forwardThrustForce * Time.deltaTime));
+            try
+            {
+                Vector3 directionPoint = swingPoint - transform.position;
+                rb.AddForce(directionPoint.normalized * (forwardThrustForce * Time.deltaTime));
 
-            float distanceFromPoint = Vector3.Distance(transform.position, swingPoint);
+                float distanceFromPoint = Vector3.Distance(transform.position, swingPoint);
 
-            joint.maxDistance = distanceFromPoint * 0.8f;
-            joint.minDistance = distanceFromPoint * 0.25f;
+                joint.maxDistance = distanceFromPoint * 0.8f;
+                joint.minDistance = distanceFromPoint * 0.25f;
+            }
+            catch (Exception e)
+            {
+                
+            }
+            
         }
         
         // extend cable
         if (movement.y < 0)
         {
-            float extendedDistanceFromPoint = Vector3.Distance(transform.position, swingPoint) + extendCableSpeed;
+            try
+            {
+                float extendedDistanceFromPoint = Vector3.Distance(transform.position, swingPoint) + extendCableSpeed;
 
-            joint.maxDistance = extendedDistanceFromPoint * 0.8f;
-            joint.minDistance = extendedDistanceFromPoint * 0.25f;
+                joint.maxDistance = extendedDistanceFromPoint * 0.8f;
+                joint.minDistance = extendedDistanceFromPoint * 0.25f;
+            }
+            catch (Exception e)
+            {
+                
+            }
+            
         }
         
     }
