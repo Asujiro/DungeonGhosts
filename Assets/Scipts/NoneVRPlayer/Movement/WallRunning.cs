@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -177,11 +178,14 @@ public class WallRunning : MonoBehaviour
 
     private void WallRunningMovement()
     {
+        
+        
         rb.useGravity = useGravity;
         
         
         //when the wall is on the right use rightHit when on the left use leftHit
         Vector3 wallNormal = wallRight ? rightWallHit.normal : leftWallHit.normal;
+        
         // ensure that you can move forward on the wall even when its rotated 
         Vector3 wallForward = Vector3.Cross(wallNormal, transform.up);
 
@@ -219,6 +223,7 @@ public class WallRunning : MonoBehaviour
 
     private void StartWallRun()
     {
+        
         pM.SetWallRunning(true);
 
         wallRunTimer = maxWallRunTime;

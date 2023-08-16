@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerMovement))]
 [RequireComponent(typeof(Swinging))]
-[RequireComponent(typeof(GrapplePointPediction))]
+[RequireComponent(typeof(GrapplePointPrediction))]
 public class Grappling : MonoBehaviour
 {
     [Header("Input")] 
@@ -18,7 +18,7 @@ public class Grappling : MonoBehaviour
     [SerializeField] private LineRenderer lr;
     
     private PlayerMovement pM;
-    private GrapplePointPediction gPP;
+    private GrapplePointPrediction gPP;
     private Rigidbody rb;
 
     [Header("Grappling")]
@@ -53,7 +53,7 @@ public class Grappling : MonoBehaviour
     void Start()
     {
         pM = GetComponent<PlayerMovement>();
-        gPP = GetComponent<GrapplePointPediction>();
+        gPP = GetComponent<GrapplePointPrediction>();
         maxGrapplingDistance = gPP.GetMaxSwingGrapplingDistance();
         rb = GetComponent<Rigidbody>();
     }

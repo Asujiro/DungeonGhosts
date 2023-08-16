@@ -6,10 +6,11 @@ public class HighscoreSender : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI playerName;
     [SerializeField] private Timer timer;
-
+    private HighscoreDownloader highscoreDownloader;
     public void SendHighscoreToServer()
     {
-        StartCoroutine(PostHighscore(playerName.text, timer.GetTime(), timer.GetLevel()));
+        highscoreDownloader = GetComponent<HighscoreDownloader>();
+        StartCoroutine(PostHighscore(playerName.text, timer.GetTime(), highscoreDownloader.GetLvl()));
     }
 
     private IEnumerator PostHighscore(string playerName, float score, int level)

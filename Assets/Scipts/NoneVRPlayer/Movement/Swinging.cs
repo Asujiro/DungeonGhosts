@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerMovement))]
 [RequireComponent(typeof(LineRenderer))]
-[RequireComponent(typeof(GrapplePointPediction))]
+[RequireComponent(typeof(GrapplePointPrediction))]
 public class Swinging : MonoBehaviour
 {
     [Header("Input")]
@@ -31,7 +31,7 @@ public class Swinging : MonoBehaviour
     private PlayerMovement pM;
     private LineRenderer lr;
     private bool swinging;
-    private GrapplePointPediction gPP;
+    private GrapplePointPrediction gPP;
     private void OnEnable()
     {
         swingKey.action.Enable();
@@ -51,7 +51,7 @@ public class Swinging : MonoBehaviour
         lr = GetComponent<LineRenderer>();
         pM = GetComponent<PlayerMovement>();
         rb = GetComponent<Rigidbody>();
-        gPP = GetComponent<GrapplePointPediction>();
+        gPP = GetComponent<GrapplePointPrediction>();
     }
 
     // Update is called once per frame
@@ -166,7 +166,7 @@ public class Swinging : MonoBehaviour
             }
             catch (Exception e)
             {
-                
+             Debug.Log(e);   
             }
             
         }
@@ -183,7 +183,7 @@ public class Swinging : MonoBehaviour
             }
             catch (Exception e)
             {
-                
+                Debug.Log(e);
             }
             
         }

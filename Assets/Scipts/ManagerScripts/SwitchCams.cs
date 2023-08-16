@@ -13,6 +13,7 @@ public class SwitchCams : MonoBehaviour
     [SerializeField] private Timer timer;
     [SerializeField] private GameObject dragManager;
     [SerializeField] private InputAction input;
+    [SerializeField] private Finish finishLine;
     private GameObject spawnedPlayer;
     
     private void OnEnable()
@@ -35,6 +36,7 @@ public class SwitchCams : MonoBehaviour
             buildCam.SetActive(false);
             spawnedPlayer = Instantiate(playerPrefab, spawnPoint.transform.position, Quaternion.identity);
             dragManager.SetActive(false);
+            finishLine.SetPlayer(spawnedPlayer);
             timer.StartTimer();
             
         }

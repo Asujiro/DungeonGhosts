@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Draggable
   - SpawnPoint
+  - DeathBox
+  - Checkpoint
+  - DamageSource
+  - PlaceArea
   layers:
   - Default
   - TransparentFX
@@ -16,7 +20,7 @@ TagManager:
   - Player
   - whatIsWall
   - whatIsGrappleable
-  - 
+  - whatIsIce
   - 
   - 
   - 

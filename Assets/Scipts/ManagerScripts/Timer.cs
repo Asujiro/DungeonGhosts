@@ -15,6 +15,8 @@ public class Timer : MonoBehaviour
 
     [SerializeField] private bool timerActive;
     [SerializeField] private int lvl;
+    [SerializeField] private HighscoreDownloader highscore;
+    
     void Update()
     {
         Counter();
@@ -49,10 +51,5 @@ public class Timer : MonoBehaviour
     {
         return currentTime;
     }
-
-    public int GetLevel()
-    {
-        return lvl;
-    }
-
+    
 }
