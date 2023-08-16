@@ -22,6 +22,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform orientation;
     [SerializeField] private float groundDrag;
     [SerializeField] private float swingSpeed;
+    [SerializeField] private float iceGroundDrag;
+    private float drag;
     private bool wallRunning;
     private bool swinging;
     private bool freeze;
@@ -45,8 +47,11 @@ public class PlayerMovement : MonoBehaviour
     [Header("Ground Check")] 
     [SerializeField] private float playerHeight;
     [SerializeField] private LayerMask whatIsGround;
+    [SerializeField] private LayerMask whatIsIce;
+    [SerializeField] private LayerMask whatIsGrappleable;
     private bool grounded;
-
+    private bool groundedOnIce;
+    
     [Header("Slope Handling")] 
     [SerializeField] private float maxSlopeAngle;
     private RaycastHit slopeHit;
@@ -59,6 +64,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody rb;
 
     private MovementState state;
+
     private enum MovementState
     {
         Freeze,
@@ -67,6 +73,7 @@ public class PlayerMovement : MonoBehaviour
         WallRunning,
         Swinging,
         Crouching,
+        Ice,
         Air
     }
     
@@ -100,10 +107,11 @@ public class PlayerMovement : MonoBehaviour
     {
         // ground check
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
+        groundedOnIce = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsIce);
         MyInput();
         SpeedControl();
         StateHandler();
-        
+        Debug.Log(groundedOnIce);
         //Debug.Log(moveSpeed);
         //Debug.Log(state);
         
@@ -116,15 +124,14 @@ public class PlayerMovement : MonoBehaviour
     {
         MovePlayer();
     }
-
-    // ReSharper disable Unity.PerformanceAnalysis
+    
     private void MyInput()
     {
         movement = movementControl.action.ReadValue<Vector2>();
         horizontalInput = movement.x;
         verticalInput = movement.y;
 
-        if (jumpControl.action.inProgress && readyToJump && grounded)
+        if (jumpControl.action.inProgress && readyToJump && (grounded || groundedOnIce))
         {
             readyToJump = false;
             Jump();
@@ -160,7 +167,7 @@ public class PlayerMovement : MonoBehaviour
         }
         
         // Mode - Sprinting 
-        else if (sprintControl.action.inProgress && grounded)
+        else if (sprintControl.action.inProgress && grounded || groundedOnIce)
         {
             state = MovementState.Sprinting;
             moveSpeed = sprintSpeed;
@@ -193,6 +200,14 @@ public class PlayerMovement : MonoBehaviour
         {
             state = MovementState.Walking;
             moveSpeed = walkSpeed;
+            drag = groundDrag;
+        }
+        
+        else if (groundedOnIce)
+        {
+            state = MovementState.Ice;
+            moveSpeed = walkSpeed;
+            drag = iceGroundDrag;
         }
         
         // Mode - Air
@@ -200,6 +215,7 @@ public class PlayerMovement : MonoBehaviour
         {
             state = MovementState.Air;
         }
+        
     }
     private void MovePlayer()
     {
@@ -218,8 +234,11 @@ public class PlayerMovement : MonoBehaviour
         }
         
         // on ground
-        if(grounded)
+        if (grounded)
+        {
             rb.AddForce(moveDirection.normalized * (moveSpeed * 10f), ForceMode.Force);
+            rb.AddForce(Vector3.down * 2f, ForceMode.Force);
+        }       
         // in air
         else if(!grounded)
         {
@@ -271,7 +290,7 @@ public class PlayerMovement : MonoBehaviour
     private void DragHandler()
     {
         if (grounded && !activeGrapple)
-            rb.drag = groundDrag;
+            rb.drag = drag;
         else
         {
             rb.drag = 0;

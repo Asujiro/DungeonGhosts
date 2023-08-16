@@ -12,17 +12,18 @@ public class DragObject : MonoBehaviour
     [SerializeField] private InputAction mouseClick;
     [SerializeField] private InputAction mouseWheelDown;
     [SerializeField] private InputAction mouseWheelUp;
-    [SerializeField] private InputAction rotateRight;
-    [SerializeField] private InputAction rotateUp;
+    [SerializeField] private InputAction rotateControl;
     [SerializeField] private InputAction mouseControl;
     private Camera mainCamera;
     private WaitForFixedUpdate waitForFixedUpdate;
     private Vector3 rotation;
     private Vector2 lastCursorPos;
     
+    
     [Header("Values")]
-    [SerializeField]private float mouseDragSpeed = 10f;
-    [SerializeField] private float rotSpeed = 10f;
+    [SerializeField] private float mouseDragSpeed = 10f;
+    [SerializeField] private float rotSpeed = 1f;
+    [SerializeField] private float scrollSpeed;
     private void Awake()
     {
         mainCamera = Camera.main;
@@ -30,23 +31,23 @@ public class DragObject : MonoBehaviour
 
     private void OnEnable()
     {
-        rotateUp.Enable();
+        rotateControl.Enable();
         mouseWheelUp.Enable();
         mouseWheelDown.Enable();
         mouseClick.Enable();
         mouseControl.Enable();
-        rotateRight.Enable();
+        rotateControl.Enable();
         mouseClick.performed += MousePressed;
     }
 
     private void OnDisable()
     {
-        rotateUp.Disable();
+        rotateControl.Disable();
         mouseControl.Disable();
         mouseWheelUp.Disable();
         mouseWheelDown.Disable();
         mouseClick.Disable();
-        rotateRight.Disable();
+        rotateControl.Disable();
         mouseClick.performed -= MousePressed;
     }
 
@@ -69,9 +70,10 @@ public class DragObject : MonoBehaviour
             }
         }
     }
-
     private IEnumerator DragUpdate(GameObject clickedObject)
     {
+        clickedObject.TryGetComponent<IDrag>(out var iDragComponent);
+        iDragComponent?.OnDragStart();
         float initialDistance = Vector3.Distance(clickedObject.transform.position, mainCamera.transform.position);
         clickedObject.TryGetComponent<Rigidbody>(out var rb);
         while (mouseClick.ReadValue<float>() != 0)
@@ -86,31 +88,31 @@ public class DragObject : MonoBehaviour
             
             if (mouseWheelDown.triggered)
             {
-                initialDistance = Vector3.Distance(clickedObject.transform.position - new Vector3(0, 0, 1f),
+                initialDistance = Vector3.Distance(clickedObject.transform.position - new Vector3(0, 0, scrollSpeed),
                     mainCamera.transform.position);
             }
 
             else if (mouseWheelUp.triggered)
             {
-                initialDistance = Vector3.Distance(clickedObject.transform.position + new Vector3(0, 0, 1f),
+                initialDistance = Vector3.Distance(clickedObject.transform.position + new Vector3(0, 0, scrollSpeed),
                     mainCamera.transform.position);
             }
-            else if (rotateRight.ReadValue<float>() != 0)
+            else if (rotateControl.ReadValue<float>() != 0)
             {     
                     CursorControl.SetPosition(lastCursorPos);
-                    float rotSpeed = 20f;
                     
-                    float rotx = Input.GetAxis ("Mouse X") * rotSpeed * Mathf.Deg2Rad;
-                    float roty = Input.GetAxis ("Mouse Y") * rotSpeed * Mathf.Deg2Rad;
+                    float rotx = mouseControl.ReadValue<Vector2>().x * rotSpeed * Mathf.Deg2Rad;
+                    float roty = mouseControl.ReadValue<Vector2>().y * rotSpeed * Mathf.Deg2Rad;
                     clickedObject.transform.RotateAround(Vector3.up, -rotx);
                     clickedObject.transform.RotateAround(Vector3.right, roty);
             }
         }
+        iDragComponent?.OnDragEnd();
     }
 
     private void LastCursorPosition()
     {
-        if (rotateRight.triggered)
+        if (rotateControl.triggered)
         {
             lastCursorPos = CursorControl.GetPosition();
         }

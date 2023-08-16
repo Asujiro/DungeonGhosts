@@ -115,22 +115,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 436275a13d4459746955fc6db5953473, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _active: 1
-  _enableRotation: 1
   _mouseSense: 1.8
-  _enableTranslation: 1
-  _translationSpeed: 55
-  _enableMovement: 1
   _movementSpeed: 10
   _boostedSpeed: 50
   _boostSpeed: 304
-  _moveUp: 101
-  _moveDown: 113
   _enableSpeedAcceleration: 1
   _speedAccelerationFactor: 1.5
   _initPositonButton: 114
   movementControl: {fileID: -2276220125582291356, guid: fde199c270e0138438181ae8da89780d, type: 3}
   camRotationControl: {fileID: -8144780146255961091, guid: fde199c270e0138438181ae8da89780d, type: 3}
+  mouse: {fileID: 4107896077276154428, guid: fde199c270e0138438181ae8da89780d, type: 3}
 --- !u!114 &7036178180499334401
 MonoBehaviour:
   m_ObjectHideFlags: 0

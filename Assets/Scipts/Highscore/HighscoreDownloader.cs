@@ -5,12 +5,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using SimpleJSON;
+using UnityEngine.Networking;
 
 public class HighscoreDownloader : MonoBehaviour
 {
     public TextMeshProUGUI highscoreText;
     private string serverURL = "https://asujiro.com/highscores.json ";
-    [SerializeField] private Timer lvl;
+    [SerializeField] private int lvl;
 
     [System.Serializable]
     public class HighscoreEntry
@@ -26,17 +27,17 @@ public class HighscoreDownloader : MonoBehaviour
 
     private IEnumerator DownloadHighscores()
     {
-        using (WWW www = new WWW(serverURL))
+        using (UnityWebRequest www = UnityWebRequest.Get(serverURL))
         {
-            yield return www;
+            yield return www.SendWebRequest();
 
-            if (!string.IsNullOrEmpty(www.error))
+            if (www.result != UnityWebRequest.Result.Success)
             {
                 Debug.LogError("Error downloading highscores: " + www.error);
             }
             else
             {
-                string json = www.text;
+                string json = www.downloadHandler.text;
                 ProcessAndDisplayHighscores(json);
             }
         }
@@ -49,7 +50,7 @@ public class HighscoreDownloader : MonoBehaviour
         var jsonObject = JSON.Parse(json);
         if (jsonObject != null && jsonObject["highscores"] != null)
         {
-            string levelName = "level" + lvl.GetLevel();
+            string levelName = "level" + lvl;
             JSONNode levelHighscores = jsonObject["highscores"][levelName];
 
             if (levelHighscores != null)
@@ -114,5 +115,15 @@ public class HighscoreDownloader : MonoBehaviour
     {
         StartCoroutine(DownloadHighscores());
     }
-    
+
+    public void SetLevel(int level)
+    {
+        lvl = level;
+    }
+
+    public int GetLvl()
+    {
+        return lvl;
+    }
+
 }
