@@ -8,6 +8,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private InputActionReference sprintControl;
     [SerializeField] private InputActionReference jumpControl;
     [SerializeField] private InputActionReference crouchControl;
+    [SerializeField] private InputAction switchModeSwing;
+    [SerializeField] private InputAction switchModeThrow;
     private Vector2 movement;
     private float horizontalInput;
     private float verticalInput;
@@ -48,16 +50,18 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float playerHeight;
     [SerializeField] private LayerMask whatIsGround;
     [SerializeField] private LayerMask whatIsIce;
-    [SerializeField] private LayerMask whatIsGrappleable;
     private bool grounded;
     private bool groundedOnIce;
     
     [Header("Slope Handling")] 
     [SerializeField] private float maxSlopeAngle;
     private RaycastHit slopeHit;
-    
-   
 
+    [Header("Switch Mouse Mode")] 
+    private Grappling grap;
+    private Swinging swing;
+    private GrapplePointPrediction grapPoint;
+    private Throwing throwning;
     
     private Vector3 moveDirection;
 
@@ -65,17 +69,7 @@ public class PlayerMovement : MonoBehaviour
 
     private MovementState state;
 
-    private enum MovementState
-    {
-        Freeze,
-        Walking,
-        Sprinting,
-        WallRunning,
-        Swinging,
-        Crouching,
-        Ice,
-        Air
-    }
+    
     
     // [SerializeField] private Transform cameraTransform;
     private void OnEnable()
@@ -84,14 +78,22 @@ public class PlayerMovement : MonoBehaviour
         jumpControl.action.Enable();
         sprintControl.action.Enable();
         crouchControl.action.Enable();
+        switchModeSwing.Enable();
+        switchModeSwing.performed += SwitchToSwingMode;
+        switchModeThrow.Enable();
+        switchModeThrow.performed += SwitchToThrowing;
     }
-
+    
     private void OnDisable()
     {
         movementControl.action.Disable();
         jumpControl.action.Disable();
         sprintControl.action.Disable();
         crouchControl.action.Disable();
+        switchModeSwing.Disable();
+        switchModeSwing.performed -= SwitchToSwingMode;
+        switchModeThrow.Disable();
+        switchModeThrow.performed -= SwitchToThrowing;
     }
 
     private void Start()
@@ -101,8 +103,13 @@ public class PlayerMovement : MonoBehaviour
         readyToJump = true;
         startYScale = transform.localScale.y;
         swinging = false;
-    }
+        swing = GetComponent<Swinging>();
+        grap = GetComponent<Grappling>();
+        grapPoint = GetComponent<GrapplePointPrediction>();
+        throwning = GetComponent<Throwing>();
 
+    }
+    
     private void Update()
     {
         // ground check
@@ -111,7 +118,6 @@ public class PlayerMovement : MonoBehaviour
         MyInput();
         SpeedControl();
         StateHandler();
-        Debug.Log(groundedOnIce);
         //Debug.Log(moveSpeed);
         //Debug.Log(state);
         
@@ -123,6 +129,18 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         MovePlayer();
+    }
+    
+    private enum MovementState
+    {
+        Freeze,
+        Walking,
+        Sprinting,
+        WallRunning,
+        Swinging,
+        Crouching,
+        Ice,
+        Air
     }
     
     private void MyInput()
@@ -364,4 +382,23 @@ public class PlayerMovement : MonoBehaviour
     {
         return activeGrapple;
     }
+    
+    private void SwitchToSwingMode(InputAction.CallbackContext obj)
+    {
+        throwning.SetIsSwinging(true);
+        swing.SetIsThrowing(false);
+        grap.SetIsThrowing(false);
+        grapPoint.enabled = true;
+        Debug.Log("Swinging Mode");
+    }
+
+    private void SwitchToThrowing(InputAction.CallbackContext callbackContext)
+    {
+        Debug.Log("Throwing Mode");
+        throwning.SetIsSwinging(false);
+        swing.SetIsThrowing(true);
+        grap.SetIsThrowing(true);
+        grapPoint.enabled = false;
+    }
+    
 }
