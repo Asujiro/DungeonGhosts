@@ -64,7 +64,6 @@ public class Grappling : MonoBehaviour
     { 
         if (grapplingControl.action.triggered && !isThrowing)
         {
-            Debug.Log("Hallo");
             StartGrapple();
         }
 
