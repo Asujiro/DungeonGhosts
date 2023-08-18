@@ -27,6 +27,7 @@ public class Grappling : MonoBehaviour
     private Vector3 grapplePoint;
     private bool grappling;
     private float maxGrapplingDistance;
+    private bool isThrowing;
     
     private bool enableMovementOnNextTouch;
     private Vector3 velocityToSet;
@@ -60,8 +61,8 @@ public class Grappling : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-        if (grapplingControl.action.triggered)
+    { 
+        if (grapplingControl.action.triggered && !isThrowing)
         {
             Debug.Log("Hallo");
             StartGrapple();
@@ -180,4 +181,8 @@ public class Grappling : MonoBehaviour
         return velocityXZ + velocityY;
     }
     
+    public void SetIsThrowing(bool status)
+    {
+        isThrowing = status;
+    }
 }

@@ -29,4 +29,14 @@ public class Damage : MonoBehaviour
             lastCheckPoint = other.gameObject;
         }
     }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("DamageSource"))
+        {
+            gameObject.transform.position = lastCheckPoint.transform.position;
+            gameObject.GetComponent<Rigidbody>().velocity = new Vector3(0f, 0f, 0f);
+            deathSound.Play();
+        }
+    }
 }

@@ -32,6 +32,7 @@ public class Swinging : MonoBehaviour
     private LineRenderer lr;
     private bool swinging;
     private GrapplePointPrediction gPP;
+    private bool isThrowing = false;
     private void OnEnable()
     {
         swingKey.action.Enable();
@@ -58,7 +59,7 @@ public class Swinging : MonoBehaviour
     void Update()
     {
         swinging = swingKey.action.IsPressed();
-        if (swingKey.action.triggered)
+        if (swingKey.action.triggered && !isThrowing)
         {
             StartSwing();
         }
@@ -67,7 +68,7 @@ public class Swinging : MonoBehaviour
             StopSwing();
         }
 
-        if (swinging)
+        if (swinging && !isThrowing)
         {
             SwingAirMovement(); 
         }
@@ -188,6 +189,11 @@ public class Swinging : MonoBehaviour
             
         }
         
+    }
+
+    public void SetIsThrowing(bool status)
+    {
+        isThrowing = status;
     }
     
 }

@@ -563,6 +563,7 @@ GameObject:
   - component: {fileID: 7170389733198698457}
   - component: {fileID: 9072105023209125274}
   - component: {fileID: 7054563064517677712}
+  - component: {fileID: 4917554809358991666}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -631,6 +632,40 @@ MonoBehaviour:
   sprintControl: {fileID: 841104677254630266, guid: fde199c270e0138438181ae8da89780d, type: 3}
   jumpControl: {fileID: 4429003739753688695, guid: fde199c270e0138438181ae8da89780d, type: 3}
   crouchControl: {fileID: 5781060230953968305, guid: fde199c270e0138438181ae8da89780d, type: 3}
+  switchModeSwing:
+    m_Name: Switch Mode Swing
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 4702c1dc-4db3-46b9-b7e1-12bb9604b96d
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: e065a8c2-c125-4bad-997c-d16e5feb52c3
+      m_Path: <Keyboard>/1
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Switch Mode Swing
+      m_Flags: 0
+    m_Flags: 0
+  switchModeThrow:
+    m_Name: Switch Mode Throw
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: e80d078a-4a14-4e6a-b7ee-db46469a1349
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: c51d3a7c-a260-4d6d-b18e-5f66c4ae800f
+      m_Path: <Keyboard>/2
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Switch Mode Throw
+      m_Flags: 0
+    m_Flags: 0
   walkSpeed: 7
   sprintSpeed: 10
   wallRunSpeed: 8.5
@@ -650,9 +685,6 @@ MonoBehaviour:
   whatIsIce:
     serializedVersion: 2
     m_Bits: 512
-  whatIsGrappleable:
-    serializedVersion: 2
-    m_Bits: 0
   maxSlopeAngle: 30
 --- !u!114 &7092019107295481099
 MonoBehaviour:
@@ -864,6 +896,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48abd9d757b5b5d419429c3d6f2da179, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4917554809358991666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2761281176092910925}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6db3e98caaff7b4fbc59a5933f4e5f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerCam: {fileID: 1434053980880049025}
+  throwingObject: {fileID: 5411150049577603460, guid: a5aaab23155ec494b872eb8a90bd6666, type: 3}
+  gunTip: {fileID: 4456450759501159751}
+  throwForce: 10
+  throwKey:
+    m_Name: Throw Key
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 177be827-f500-43cf-a63b-18e468e30cca
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 85f86a16-aa4d-4ee8-be71-b5102a0ec3c8
+      m_Path: <Mouse>/leftButton
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Throw Key
+      m_Flags: 0
+    m_Flags: 0
 --- !u!1 &5875174026952854409
 GameObject:
   m_ObjectHideFlags: 0
