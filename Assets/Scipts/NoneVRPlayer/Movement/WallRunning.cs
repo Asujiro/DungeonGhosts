@@ -1,11 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Object = UnityEngine.Object;
+
 
 [RequireComponent(typeof(PlayerMovement))]
 public class WallRunning : MonoBehaviour

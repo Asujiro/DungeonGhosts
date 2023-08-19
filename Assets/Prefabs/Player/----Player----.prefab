@@ -74,7 +74,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: e33988ccfc377c44c848928db4fefa5b, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 621ac16f425127644b01ad263e996d88, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -685,7 +685,7 @@ MonoBehaviour:
   whatIsIce:
     serializedVersion: 2
     m_Bits: 512
-  maxSlopeAngle: 30
+  maxSlopeAngle: 50
 --- !u!114 &7092019107295481099
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -740,7 +740,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 04e40ef2223763e44a7b1b71f82f3d7c, type: 2}
+  - {fileID: 2100000, guid: 8959a7dbfa95a284193eb0d1ea8cf08f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -862,8 +862,8 @@ MonoBehaviour:
   lr: {fileID: 9116662246279744236}
   grappleDelayTime: 0.25
   overshootYAxis: 2
-  fCam: {fileID: 0}
-  grapplingFOV: 0
+  fCam: {fileID: 7303287028507987794}
+  grapplingFOV: 100
   grapplingCooldown: 1
 --- !u!114 &9072105023209125274
 MonoBehaviour:
@@ -883,7 +883,7 @@ MonoBehaviour:
   whatIsGrappleable:
     serializedVersion: 2
     m_Bits: 256
-  maxSwingGrapplingDistance: 25
+  maxSwingGrapplingDistance: 15
 --- !u!114 &7054563064517677712
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -991,7 +991,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 549e70d81bc062c43928ba4b1e82e7e4, type: 2}
+  - {fileID: 2100000, guid: 42aebdafcd02bca478074fec555873a0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

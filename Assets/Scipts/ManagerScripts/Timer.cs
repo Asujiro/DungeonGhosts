@@ -1,6 +1,5 @@
 using System;
 using TMPro;
-using UnityEditor.TestTools.CodeCoverage;
 using UnityEngine;
 
 public class Timer : MonoBehaviour
@@ -29,7 +28,7 @@ public class Timer : MonoBehaviour
             currentTime = currentTime += Time.deltaTime;
         }
         TimeSpan time = TimeSpan.FromSeconds(currentTime);
-        timerText.text = time.Minutes.ToString() + ":" + time.Seconds.ToString() + ":" + time.Milliseconds.ToString();
+        timerText.text = time.Minutes.ToString() + ":" + time.Seconds.ToString() + "." + time.Milliseconds.ToString();
     }
 
     public void StartTimer()
@@ -51,5 +50,4 @@ public class Timer : MonoBehaviour
     {
         return currentTime;
     }
-    
 }

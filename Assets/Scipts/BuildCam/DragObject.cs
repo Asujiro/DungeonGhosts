@@ -13,6 +13,7 @@ public class DragObject : MonoBehaviour
     [SerializeField] private InputAction mouseWheelDown;
     [SerializeField] private InputAction mouseWheelUp;
     [SerializeField] private InputAction rotateControl;
+    [SerializeField] private InputAction rotateControlLeft;
     [SerializeField] private InputAction mouseControl;
     private Camera mainCamera;
     private WaitForFixedUpdate waitForFixedUpdate;
@@ -22,7 +23,7 @@ public class DragObject : MonoBehaviour
     
     [Header("Values")]
     [SerializeField] private float mouseDragSpeed = 10f;
-    [SerializeField] private float rotSpeed = 1f;
+    // [SerializeField] private float rotSpeed = 1f;
     [SerializeField] private float scrollSpeed;
     private void Awake()
     {
@@ -38,6 +39,7 @@ public class DragObject : MonoBehaviour
         mouseControl.Enable();
         rotateControl.Enable();
         mouseClick.performed += MousePressed;
+        rotateControlLeft.Enable();
     }
 
     private void OnDisable()
@@ -49,6 +51,7 @@ public class DragObject : MonoBehaviour
         mouseClick.Disable();
         rotateControl.Disable();
         mouseClick.performed -= MousePressed;
+        rotateControlLeft.Disable();
     }
 
     private void Update()
@@ -97,14 +100,20 @@ public class DragObject : MonoBehaviour
                 initialDistance = Vector3.Distance(clickedObject.transform.position + new Vector3(0, 0, scrollSpeed),
                     mainCamera.transform.position);
             }
-            else if (rotateControl.ReadValue<float>() != 0)
+            else if (rotateControl.triggered)
             {     
                     CursorControl.SetPosition(lastCursorPos);
                     
-                    float rotx = mouseControl.ReadValue<Vector2>().x * rotSpeed * Mathf.Deg2Rad;
-                    float roty = mouseControl.ReadValue<Vector2>().y * rotSpeed * Mathf.Deg2Rad;
-                    clickedObject.transform.RotateAround(Vector3.up, -rotx);
-                    clickedObject.transform.RotateAround(Vector3.right, roty);
+                   // float rotx = mouseControl.ReadValue<Vector2>().x * rotSpeed * Mathf.Deg2Rad;
+                   // float roty = mouseControl.ReadValue<Vector2>().y * rotSpeed * Mathf.Deg2Rad;
+                   // clickedObject.transform.RotateAround(Vector3.up, -rotx);
+                   // clickedObject.transform.RotateAround(Vector3.right, roty);
+                   
+                   clickedObject.transform.Rotate(0.0f, 45f, 0.0f, Space.World);
+            }
+            else if (rotateControlLeft.triggered)
+            {
+                    clickedObject.transform.Rotate(0.0f, -45f, 0.0f, Space.World);
             }
         }
         iDragComponent?.OnDragEnd();

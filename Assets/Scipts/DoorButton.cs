@@ -6,7 +6,17 @@ using UnityEngine;
 public class DoorButton : MonoBehaviour
 {
     private Animator anim;
+    
+    private void OnEnable()
+    {
+        EvenManager.OnResetAllDoorTrigger += Reset;
+    }
 
+    private void OnDisable()
+    {
+        EvenManager.OnResetAllDoorTrigger -= Reset;
+    }
+    
     private bool wasPressed = false; 
     private void Start()
     {
@@ -21,5 +31,13 @@ public class DoorButton : MonoBehaviour
             anim.SetBool("PressButton", true);
             EvenManager.TriggerButton();
         }
+    }
+    
+    private void Reset()
+    {
+        wasPressed = false;
+        anim.SetBool("PressButton", false);
+        anim.SetBool("Reset", true);
+        anim.SetBool("Reset", false);
     }
 }

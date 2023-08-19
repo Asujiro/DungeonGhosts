@@ -102,7 +102,32 @@ MonoBehaviour:
     m_Id: 33e06e2d-89f5-4960-b7da-90f7ad35c778
     m_Processors: 
     m_Interactions: 
-    m_SingletonActionBindings: []
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: d3c11f99-11fd-44ba-92fe-8f242ae9a6e8
+      m_Path: <Keyboard>/e
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Rotate Control
+      m_Flags: 0
+    m_Flags: 0
+  rotateControlLeft:
+    m_Name: Rotate Control Left
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 5fdf47f0-be62-4d31-8803-6cc16f5007c9
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 0578962b-9b9b-4995-a7d1-8336870bb42c
+      m_Path: <Keyboard>/q
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Rotate Control Left
+      m_Flags: 0
     m_Flags: 0
   mouseControl:
     m_Name: Mouse Control
@@ -111,7 +136,15 @@ MonoBehaviour:
     m_Id: 5be6137d-9b4a-4c6f-adb0-3b58e6af51b1
     m_Processors: 
     m_Interactions: 
-    m_SingletonActionBindings: []
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: af8f4d2c-daec-4263-870b-9d1705abe26b
+      m_Path: <Mouse>/delta
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Mouse Control
+      m_Flags: 0
     m_Flags: 0
   mouseDragSpeed: 10
   rotSpeed: 1

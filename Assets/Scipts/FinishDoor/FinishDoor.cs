@@ -14,10 +14,12 @@ public class FinishDoor : MonoBehaviour
     private void OnEnable()
     {
         EvenManager.OnButtonPressed += OpenDoor;
+        EvenManager.OnResetAllDoorTrigger += Reset;
     }
 
     private void OnDisable()
     {
+        EvenManager.OnResetAllDoorTrigger -= Reset;
         EvenManager.OnButtonPressed -= OpenDoor;
     }
 
@@ -28,12 +30,23 @@ public class FinishDoor : MonoBehaviour
     
     private void OpenDoor()
     {
+        if (anim.GetBool("Reset"))
+        {
+            anim.SetBool("Reset", false);
+        }
         currentActions++;
-
         if (currentActions >= requiredActions)
         {
             anim.SetBool("ButtonPressed", true);
         }
+    }
+    
+    private void Reset()
+    {
+        currentActions = 0;
+        anim.SetBool("ButtonPressed", false);
+        anim.SetBool("Reset", true);
+        anim.SetBool("Reset", false);
     }
     
     

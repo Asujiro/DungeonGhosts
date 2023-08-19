@@ -50,7 +50,7 @@ MonoBehaviour:
   buildCam: {fileID: 0}
   timer: {fileID: 0}
   dragManager: {fileID: 0}
-  input:
+  switchCam:
     m_Name: Input
     m_Type: 0
     m_ExpectedControlType: 
@@ -67,7 +67,25 @@ MonoBehaviour:
       m_Action: Input
       m_Flags: 0
     m_Flags: 0
+  escMenuButton:
+    m_Name: Esc Menu Button
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: a04bde56-1128-4b3a-a1ce-46f58107f0ef
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: cf0fe8cd-f1ad-42ad-bda9-752086bac288
+      m_Path: <Keyboard>/escape
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Esc Menu Button
+      m_Flags: 0
+    m_Flags: 0
   finishLine: {fileID: 0}
+  escMenu: {fileID: 0}
 --- !u!114 &5114892198741421101
 MonoBehaviour:
   m_ObjectHideFlags: 0

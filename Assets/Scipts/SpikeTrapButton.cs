@@ -15,7 +15,7 @@ public class SpikeTrapButton : MonoBehaviour
         {
             if (other.gameObject.CompareTag("Player"))
             {
-                anim.SetBool("PressButton", true);
+                anim.SetBool("ButtonTriggered", true);
                 EvenManager.TriggerSpikeButton(spikeID);
                 Invoke(nameof(ResetButton), 5f);
             }
@@ -23,6 +23,6 @@ public class SpikeTrapButton : MonoBehaviour
 
         private void ResetButton()
         {
-            anim.SetBool("PressButton", false);
+            anim.SetBool("ButtonTriggered", false);
         }
 }

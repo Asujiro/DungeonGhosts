@@ -89,7 +89,7 @@ public class Grappling : MonoBehaviour
             return;
         }
 
-        if (gPP.GetPredictionHitPoint().point != Vector3.zero)
+        if (gPP.GetPredictionHitPoint().point != Vector3.zero && !isThrowing)
         {
             grappling = true;
             
@@ -97,15 +97,14 @@ public class Grappling : MonoBehaviour
             
             grapplePoint = gPP.GetPredictionHitPoint().point;
             Invoke(nameof(ExecuteGrapple), grappleDelayTime);
+            lr.enabled = true;
+            lr.SetPosition(1, grapplePoint);
         }
         else
         {
             grapplePoint = cam.position + cam.forward * maxGrapplingDistance;
             Invoke(nameof(StopGrapple), grappleDelayTime);
         }
-        
-        lr.enabled = true;
-        lr.SetPosition(1, grapplePoint);
     }
 
     private void ExecuteGrapple()
@@ -155,7 +154,7 @@ public class Grappling : MonoBehaviour
     private void ResetRestriction()
     {
         pM.SetActiveGrapple(false);
-        fCam.DoFov(80f);
+        fCam.DoFov(90f);
     }
 
     private void OnCollisionEnter(Collision collision)

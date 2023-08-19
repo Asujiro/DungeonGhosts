@@ -10,6 +10,9 @@ public class EvenManager : MonoBehaviour
     public delegate void SpikeButtonPressAction(int id);
     public static event SpikeButtonPressAction OnSpikeButtonPressed;
     
+    public delegate void ResetAllDoorTrigger();
+    public static event ResetAllDoorTrigger OnResetAllDoorTrigger;
+    
     public static void TriggerButton()
     {
         if (OnButtonPressed != null)
@@ -26,5 +29,12 @@ public class EvenManager : MonoBehaviour
         }
     }
     
+    public static void ResetAllDoor()
+    {
+        if (OnResetAllDoorTrigger != null)
+        {
+            OnResetAllDoorTrigger?.Invoke();
+        }
+    }
     
 }
