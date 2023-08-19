@@ -97,8 +97,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
-  m_LightingSettings: {fileID: 4890085278179872738, guid: 78151f5e58fb9f749bd5225f789faa27, type: 2}
+  m_LightingDataAsset: {fileID: 112000000, guid: 8a4e973691f86ca4aa8c2b0fa55736a8, type: 2}
+  m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -72929,7 +72929,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8277270748644004826, guid: 33315d20703b84242b8aab48c98212da, type: 3}
       propertyPath: m_Name
-      value: BuildCameFix
+      value: BuildCam
       objectReference: {fileID: 0}
     - target: {fileID: 8277270748644004826, guid: 33315d20703b84242b8aab48c98212da, type: 3}
       propertyPath: m_IsActive
@@ -92161,6 +92161,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8579432762390599442, guid: 4ed4be711c1988a41963c9ad41e462fa, type: 3}
   m_PrefabInstance: {fileID: 2062970713}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2062970717 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7838130528757641122, guid: 4ed4be711c1988a41963c9ad41e462fa, type: 3}
+  m_PrefabInstance: {fileID: 2062970713}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2063311094
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -96960,7 +96965,7 @@ PrefabInstance:
     - target: {fileID: 6342204371032583682, guid: b139e04ec02bad045a016f3664736b70, type: 3}
       propertyPath: escMenu
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2062970717}
     - target: {fileID: 6342204371032583682, guid: b139e04ec02bad045a016f3664736b70, type: 3}
       propertyPath: buildCam
       value: 

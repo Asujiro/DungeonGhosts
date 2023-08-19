@@ -9,21 +9,24 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(GrapplePointPrediction))]
 public class Swinging : MonoBehaviour
 {
+    // Input references
     [Header("Input")]
     [SerializeField] private InputActionReference swingKey;
     [SerializeField] private InputActionReference airMoveControl;
     [SerializeField] private InputActionReference shortenCableControl;
-    
-    [Header("Swinging")]
+
+    // Swinging variables
     private Vector3 swingPoint;
     private SpringJoint joint;
     private Vector3 currentGrapplePosition;
 
+    // Swing air movement settings
     [Header("SwingAirMovement")]
-    [SerializeField] private float horizontalTrustForce;
+    [SerializeField] private float horizontalThrustForce;
     [SerializeField] private float forwardThrustForce;
     [SerializeField] private float extendCableSpeed;
 
+    // References
     [Header("References")]
     [SerializeField] private Transform gunTip, player;
     [SerializeField] private Transform orientation;
@@ -33,6 +36,8 @@ public class Swinging : MonoBehaviour
     private bool swinging;
     private GrapplePointPrediction gPP;
     private bool isThrowing = false;
+
+    // Enable input actions when the component is enabled
     private void OnEnable()
     {
         swingKey.action.Enable();
@@ -40,6 +45,7 @@ public class Swinging : MonoBehaviour
         airMoveControl.action.Enable();
     }
 
+    // Disable input actions when the component is disabled
     private void OnDisable()
     {
         swingKey.action.Disable();
@@ -47,6 +53,7 @@ public class Swinging : MonoBehaviour
         shortenCableControl.action.Disable();
     }
 
+    // Initialize references
     private void Start()
     {
         lr = GetComponent<LineRenderer>();
@@ -59,31 +66,35 @@ public class Swinging : MonoBehaviour
     void Update()
     {
         swinging = swingKey.action.IsPressed();
+        
+        // Start swinging when the swing key is pressed and not throwing
         if (swingKey.action.triggered && !isThrowing)
         {
             StartSwing();
         }
+        // Stop swinging when the swing key is released
         else if (!swinging)
         {
             StopSwing();
         }
 
+        // Apply swing air movement when swinging and not throwing
         if (swinging && !isThrowing)
         {
             SwingAirMovement(); 
         }
-        
-        
     }
 
+    // LateUpdate is called once per frame after Update
     private void LateUpdate()
     {
         DrawRope();
     }
 
-
+    // Start the swing
     private void StartSwing()
     {
+        // Return if there's no prediction hit point
         if (gPP.GetPredictionHitPoint().point == Vector3.zero)
         {
             return;
@@ -91,28 +102,26 @@ public class Swinging : MonoBehaviour
         
         pM.SetSwinging(true);
         
-        
+        // Set swing point and create SpringJoint
         swingPoint = gPP.GetPredictionHitPoint().point;
         joint = player.gameObject.AddComponent<SpringJoint>();
         joint.autoConfigureConnectedAnchor = false;
         joint.connectedAnchor = swingPoint;
 
         float distanceFromPoint = Vector3.Distance(player.position, swingPoint);
-            
-        // the distance the grapple will try to keep from the point
+
+        // Set joint properties
         joint.maxDistance = distanceFromPoint * 0.8f;
         joint.minDistance = distanceFromPoint * 0.25f;
-            
-        // changeable values
         joint.spring = 4.5f;
         joint.damper = 7f;
         joint.massScale = 4.5f;
 
         lr.positionCount = 2;
         currentGrapplePosition = gunTip.position;
-        
     }
 
+    // Stop the swing
     public void StopSwing()
     {
         pM.SetSwinging(false);
@@ -120,9 +129,10 @@ public class Swinging : MonoBehaviour
         Destroy(joint);
     }
 
+    // Draw the rope between the gun tip and swing point
     private void DrawRope()
     {
-        // if not grappling, don't draw rope
+        // If not grappling, don't draw rope
         if (!joint){ return;}
 
         currentGrapplePosition = Vector3.Lerp(currentGrapplePosition, swingPoint, Time.deltaTime * 8f);
@@ -131,28 +141,29 @@ public class Swinging : MonoBehaviour
         lr.SetPosition(1, swingPoint);
     }
 
+    // Apply air movement while swinging
     private void SwingAirMovement()
     {
         var movement = airMoveControl.action.ReadValue<Vector2>();
         
-        //left and right movement
+        // Left and right movement
         switch (movement.x)
         {
             case > 0:
-                rb.AddForce(orientation.right * (horizontalTrustForce * Time.deltaTime));
+                rb.AddForce(orientation.right * (horizontalThrustForce * Time.deltaTime));
                 break;
             case < 0:
-                rb.AddForce(-orientation.right * (horizontalTrustForce * Time.deltaTime));
+                rb.AddForce(-orientation.right * (horizontalThrustForce * Time.deltaTime));
                 break;
         }
         
-        // forward movement
+        // Forward movement
         if (movement.y > 0)
         {
             rb.AddForce(orientation.forward * (forwardThrustForce * Time.deltaTime));
         }
         
-        // shorten cable
+        // Shorten cable
         if (shortenCableControl.action.inProgress)
         {
             try
@@ -167,12 +178,11 @@ public class Swinging : MonoBehaviour
             }
             catch (Exception e)
             {
-             Debug.Log(e);   
+                Debug.Log(e);   
             }
-            
         }
         
-        // extend cable
+        // Extend cable
         if (movement.y < 0)
         {
             try
@@ -186,14 +196,12 @@ public class Swinging : MonoBehaviour
             {
                 Debug.Log(e);
             }
-            
         }
-        
     }
 
+    // Set the throwing status
     public void SetIsThrowing(bool status)
     {
         isThrowing = status;
     }
-    
 }

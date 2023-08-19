@@ -62,18 +62,20 @@ public class Grappling : MonoBehaviour
     // Update is called once per frame
     void Update()
     { 
+        // Check if grappling control is triggered and not in the process of throwing
         if (grapplingControl.action.triggered && !isThrowing)
         {
             StartGrapple();
         }
 
+        // Decrement grappling cooldown timer
         if (grapplingCdTimer > 0)
         {
             grapplingCdTimer -= Time.deltaTime;
         }
-        
     }
 
+    // LateUpdate is used to update LineRenderer position during grappling
     private void LateUpdate()
     {
         if (grappling)
@@ -82,13 +84,15 @@ public class Grappling : MonoBehaviour
         }
     }
 
+    // Initiates the grapple action
     private void StartGrapple()
     {
         if (grapplingCdTimer > 0)
         {
-            return;
+            return; // Prevents grappling during cooldown
         }
 
+        // Check if prediction hit point is available and not throwing
         if (gPP.GetPredictionHitPoint().point != Vector3.zero && !isThrowing)
         {
             grappling = true;
@@ -107,6 +111,7 @@ public class Grappling : MonoBehaviour
         }
     }
 
+    // Executes the grapple action
     private void ExecuteGrapple()
     {
         pM.SetFreeze(false);
@@ -124,6 +129,7 @@ public class Grappling : MonoBehaviour
         Invoke(nameof(StopGrapple), 1f);
     }
     
+    // Stops the grapple action
     public void StopGrapple()
     {
         pM.SetFreeze(false);
@@ -132,7 +138,7 @@ public class Grappling : MonoBehaviour
         lr.enabled = false;
     }
     
-        
+    // Jumps the player to the target position with a given trajectory height
     public void JumpToPosition(Vector3 targetPosition, float trajectoryHeight)
     {
         pM.SetActiveGrapple(true);
@@ -140,10 +146,11 @@ public class Grappling : MonoBehaviour
         velocityToSet = CalculateJumpVelocity(transform.position, targetPosition, trajectoryHeight);
         Invoke(nameof(SetVelocity), 0.1f);
         
-        // ensure that movement gets enabled
+        // Ensure that movement gets enabled
         Invoke(nameof(ResetRestriction), 3f);
     }
 
+    // Sets the calculated velocity for jumping
     private void SetVelocity()
     {
         enableMovementOnNextTouch = true;
@@ -151,12 +158,14 @@ public class Grappling : MonoBehaviour
         fCam.DoFov(grapplingFOV);
     }
 
+    // Resets movement restrictions after a delay
     private void ResetRestriction()
     {
         pM.SetActiveGrapple(false);
         fCam.DoFov(90f);
     }
 
+    // Handles collision with surfaces during grapple
     private void OnCollisionEnter(Collision collision)
     {
         if (enableMovementOnNextTouch)
@@ -167,6 +176,7 @@ public class Grappling : MonoBehaviour
         }
     }
 
+    // Calculates the required jump velocity for a given trajectory
     private Vector3 CalculateJumpVelocity(Vector3 startPoint, Vector3 endPoint, float trajectoryHeight)
     {
         float gravity = Physics.gravity.y;
@@ -179,6 +189,7 @@ public class Grappling : MonoBehaviour
         return velocityXZ + velocityY;
     }
     
+    // Sets the throwing status
     public void SetIsThrowing(bool status)
     {
         isThrowing = status;

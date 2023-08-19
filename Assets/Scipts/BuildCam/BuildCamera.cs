@@ -1,24 +1,21 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
 public class BuildCamera : MonoBehaviour
 {
-    
     [SerializeField] private float mouseSense = 1.8f;
     [SerializeField] private float movementSpeed = 10f;
     [SerializeField] private float boostedSpeed = 50f;
     [SerializeField] private bool enableSpeedAcceleration = true;
     [SerializeField] private float speedAccelerationFactor = 1.5f;
-    
+
     private float currentIncrease = 1;
     private float currentIncreaseMem = 0;
     private Vector3 initPosition;
     private Vector3 initRotation;
     private Vector3 moveDirection;
-    
-    [Header("Input")] 
+
+    [Header("Input")]
     [SerializeField] private InputAction movementControl;
     [SerializeField] private InputAction camRotationControl;
     [SerializeField] private InputAction mouse;
@@ -27,21 +24,19 @@ public class BuildCamera : MonoBehaviour
     private Vector2 movement;
     private float verticalInput;
     private float horizontalInput;
-    
-    
-    
+
     private bool lockMouse;
-
-
 
     private void Start()
     {
+        // Initialize initial position and rotation
         initPosition = transform.position;
         initRotation = transform.eulerAngles;
     }
 
     private void OnEnable()
     {
+        // Enable input actions and attach event handler for camera reset
         boostSpeed.Enable();
         resetCamButton.Enable();
         camRotationControl.Enable();
@@ -49,9 +44,10 @@ public class BuildCamera : MonoBehaviour
         mouse.Enable();
         resetCamButton.performed += ResetCam;
     }
-    
+
     private void OnDisable()
     {
+        // Disable input actions and detach event handler
         boostSpeed.Disable();
         resetCamButton.Disable();
         camRotationControl.Enable();
@@ -76,6 +72,7 @@ public class BuildCamera : MonoBehaviour
         }
     }
 
+    // Calculate current increase for movement speed
     private void CalculateCurrentIncrease(bool moving)
     {
         currentIncrease = Time.deltaTime;
@@ -93,16 +90,8 @@ public class BuildCamera : MonoBehaviour
     private void Update()
     {
         SetCursorState();
-        
-        // Movement
-            CamMovement();
-        
-
-        // Rotation
-            CamRotation();
-
-        // Return to init position
-        
+        CamMovement();
+        CamRotation();
     }
 
     private void CamMovement()
@@ -111,20 +100,22 @@ public class BuildCamera : MonoBehaviour
 
         if (boostSpeed.inProgress)
             currentSpeed = boostedSpeed;
-            
+
+        // Read movement input
         movement = movementControl.ReadValue<Vector2>();
         horizontalInput = movement.x;
         verticalInput = movement.y;
-            
+
+        // Calculate movement direction
         moveDirection = transform.forward * verticalInput + transform.right * horizontalInput;
-            
-           
-        // Calc acceleration
+
+        // Calculate acceleration
         CalculateCurrentIncrease(moveDirection != Vector3.zero);
 
+        // Determine if mouse should be locked based on movement
         lockMouse = moveDirection != Vector3.zero;
-            
-            
+
+        // Apply movement
         transform.position += moveDirection * currentSpeed * currentIncrease;
     }
 
@@ -132,13 +123,13 @@ public class BuildCamera : MonoBehaviour
     {
         if (lockMouse || camRotationControl.inProgress)
         {
-            // Pitch
+            // Pitch (up and down)
             transform.rotation *= Quaternion.AngleAxis(
                 -mouse.ReadValue<Vector2>().y * mouseSense * Time.deltaTime,
                 Vector3.right
             );
 
-            // Paw
+            // Yaw (left and right)
             transform.rotation = Quaternion.Euler(
                 transform.eulerAngles.x,
                 transform.eulerAngles.y + mouse.ReadValue<Vector2>().x * mouseSense * Time.deltaTime,
@@ -149,7 +140,8 @@ public class BuildCamera : MonoBehaviour
 
     private void ResetCam(InputAction.CallbackContext callbackContext)
     {
-            transform.position = initPosition;
-            transform.eulerAngles = initRotation;
+        // Reset camera position and rotation to initial values
+        transform.position = initPosition;
+        transform.eulerAngles = initRotation;
     }
 }

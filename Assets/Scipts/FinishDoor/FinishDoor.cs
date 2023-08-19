@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FinishDoor : MonoBehaviour
@@ -9,45 +6,43 @@ public class FinishDoor : MonoBehaviour
     private int currentActions = 0;
     
     [SerializeField] private int requiredActions = 2;
-    
-
+    // Subscribe to the events when this script is enabled
     private void OnEnable()
     {
-        EvenManager.OnButtonPressed += OpenDoor;
-        EvenManager.OnResetAllDoorTrigger += Reset;
+        EventManager.OnButtonPressed += OpenDoor;
+        EventManager.OnResetAllDoorTrigger += Reset;
     }
 
+    // Unsubscribe from the events when this script is disabled
     private void OnDisable()
     {
-        EvenManager.OnResetAllDoorTrigger -= Reset;
-        EvenManager.OnButtonPressed -= OpenDoor;
-    }
-
-    private void Start()
-    {
-        anim = GetComponent<Animator>();
+        EventManager.OnButtonPressed -= OpenDoor;
+        EventManager.OnResetAllDoorTrigger -= Reset;
     }
     
+    private void Start()
+    {
+        // Get the Animator component attached to this GameObject
+        anim = GetComponent<Animator>();
+    }
+
     private void OpenDoor()
     {
-        if (anim.GetBool("Reset"))
-        {
-            anim.SetBool("Reset", false);
-        }
+        // Increment the count of actions triggered by buttons
         currentActions++;
+
+        // Check if the required number of actions have been reached
         if (currentActions >= requiredActions)
         {
+            // Trigger the "ButtonPressed" animation state to open the door
             anim.SetBool("ButtonPressed", true);
         }
     }
-    
+
     private void Reset()
     {
+        // Reset the door's state when the event is invoked
         currentActions = 0;
         anim.SetBool("ButtonPressed", false);
-        anim.SetBool("Reset", true);
-        anim.SetBool("Reset", false);
     }
-    
-    
 }

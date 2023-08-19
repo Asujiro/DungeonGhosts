@@ -615,7 +615,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!114 &840756054223958407
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1185,8 +1185,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f000961ab12292c4e9a16304eb08e690, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensX: 100
-  sensY: 100
+  sensX: 20
+  sensY: 20
   orientation: {fileID: 2247912719934754806}
   camHolder: {fileID: 1620026844213589550}
   mouseControl: {fileID: -322641337846207582, guid: fde199c270e0138438181ae8da89780d, type: 3}
