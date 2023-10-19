@@ -1,8 +1,10 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
 public class PlayerMovement : MonoBehaviour
 {
+    // Inputs
     [Header("Inputs")]
     [SerializeField] private InputActionReference movementControl;
     [SerializeField] private InputActionReference sprintControl;
@@ -10,14 +12,17 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private InputActionReference crouchControl;
     [SerializeField] private InputAction switchModeSwing;
     [SerializeField] private InputAction switchModeThrow;
+
+    // Movement variables
     private Vector2 movement;
     private float horizontalInput;
     private float verticalInput;
-    
-    
-    [Header("Movement")] 
     private float moveSpeed;
     private bool crouching;
+    private float startYScale;
+
+    // Speed settings
+    [Header("Movement")] 
     [SerializeField] private float walkSpeed;
     [SerializeField] private float sprintSpeed;
     [SerializeField] private float wallRunSpeed;
@@ -31,49 +36,50 @@ public class PlayerMovement : MonoBehaviour
     private bool freeze;
     private bool activeGrapple;
 
-    //[SerializeField] private float rotationSpeed = 4f;
-
+    // Crouching settings
     [Header("Crouching")] 
     [SerializeField] private float crouchSpeed;
     [SerializeField] private float crouchYScale;
-    private float startYScale;
-    
-    
+
+    // Jumping settings
     [Header("Jumping")] 
     [SerializeField] private float jumpForce;
     [SerializeField] private float jumpCooldown;
     [SerializeField] private float airMultiplier;
     private bool readyToJump;
     private bool exitingSlope;
-    
+
+    // Ground check settings
     [Header("Ground Check")] 
     [SerializeField] private float playerHeight;
     [SerializeField] private LayerMask whatIsGround;
     [SerializeField] private LayerMask whatIsIce;
     private bool grounded;
     private bool groundedOnIce;
-    
+
+    // Slope handling
     [Header("Slope Handling")] 
     [SerializeField] private float maxSlopeAngle;
     private RaycastHit slopeHit;
 
-    [Header("Switch Mouse Mode")] 
+    // Switch Mouse Mode settings
     private Grappling grap;
     private Swinging swing;
     private GrapplePointPrediction grapPoint;
     private Throwing throwning;
-    
+
     private Vector3 moveDirection;
 
     private Rigidbody rb;
 
     private MovementState state;
 
-    
-    
-    // [SerializeField] private Transform cameraTransform;
+    // Methods
+
+    // Enable input actions when the component is enabled
     private void OnEnable()
     {
+        // Enable input actions
         movementControl.action.Enable();
         jumpControl.action.Enable();
         sprintControl.action.Enable();
@@ -84,8 +90,10 @@ public class PlayerMovement : MonoBehaviour
         switchModeThrow.performed += SwitchToThrowing;
     }
     
+    // Disable input actions when the component is disabled
     private void OnDisable()
     {
+        // Disable input actions
         movementControl.action.Disable();
         jumpControl.action.Disable();
         sprintControl.action.Disable();
@@ -96,6 +104,7 @@ public class PlayerMovement : MonoBehaviour
         switchModeThrow.performed -= SwitchToThrowing;
     }
 
+    // Initialize components and variables
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -107,30 +116,31 @@ public class PlayerMovement : MonoBehaviour
         grap = GetComponent<Grappling>();
         grapPoint = GetComponent<GrapplePointPrediction>();
         throwning = GetComponent<Throwing>();
-
     }
-    
+
+    // Update is called once per frame
     private void Update()
     {
-        // ground check
+        // Ground check
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
         groundedOnIce = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsIce);
         MyInput();
         SpeedControl();
         StateHandler();
-        //Debug.Log(moveSpeed);
-        //Debug.Log(state);
+        // Debug.Log(moveSpeed);
+        // Debug.Log(state);
         
-        //handle drag
+        // Handle drag
         DragHandler();
-
     }
 
+    // FixedUpdate is called at a fixed interval
     private void FixedUpdate()
     {
         MovePlayer();
     }
-    
+
+    // Enumeration for movement states
     private enum MovementState
     {
         Freeze,
@@ -142,7 +152,8 @@ public class PlayerMovement : MonoBehaviour
         Ice,
         Air
     }
-    
+
+    // Handle user input
     private void MyInput()
     {
         movement = movementControl.action.ReadValue<Vector2>();
@@ -171,11 +182,11 @@ public class PlayerMovement : MonoBehaviour
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
             crouching = false;
         }
-        
     }
 
+    // Handle movement state based on conditions
     private void StateHandler()
-    {   
+    {
         // Mode - Freeze
         if (freeze)
         {
@@ -199,12 +210,11 @@ public class PlayerMovement : MonoBehaviour
         }
         
         // Mode - Wall-Running
-        else if(wallRunning)
+        else if (wallRunning)
         {
             state = MovementState.WallRunning;
             moveSpeed = wallRunSpeed;
         }
-        
         
         // Mode - Crouching
         else if (crouchControl.action.inProgress)
@@ -233,14 +243,14 @@ public class PlayerMovement : MonoBehaviour
         {
             state = MovementState.Air;
         }
-        
     }
+
+    // Move the player based on the movement state
     private void MovePlayer()
     {
         if (swinging || activeGrapple) return;
 
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
-        // moveDirection = cameraTransform.forward * movement.y + cameraTransform.right * movement.x;
 
         if (OnSlope() && !exitingSlope)
         {
@@ -250,41 +260,35 @@ public class PlayerMovement : MonoBehaviour
                 rb.AddForce(Vector3.down * 80f, ForceMode.Force);
             }
         }
-        
-        // on ground
+
+        // On ground
         if (grounded)
         {
             rb.AddForce(moveDirection.normalized * (moveSpeed * 10f), ForceMode.Force);
             rb.AddForce(Vector3.down * 2f, ForceMode.Force);
         }       
-        // in air
-        else if(!grounded)
+        // In air
+        else if (!grounded)
         {
             rb.AddForce(moveDirection.normalized * (moveSpeed * 10f * airMultiplier), ForceMode.Force);
         }
-        
-        // trun off gravity while on slope
+
+        // Turn off gravity while on slope
         if (!wallRunning)
         {
             rb.useGravity = !OnSlope();
         }
-        /*
-        if (movement != Vector2.zero)
-        {
-            float targetAngle = Mathf.Atan2(movement.x, movement.y) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
-            Quaternion rotation = Quaternion.Euler(0f, targetAngle, 0f);
-            transform.rotation = Quaternion.Lerp(transform.rotation, rotation, Time.deltaTime * rotationSpeed);
-        }
-        */
     }
     
+    // Control speed based on conditions
     private void SpeedControl()
     {
         if (activeGrapple)
         {
             return;
         }
-        //limiting speed on slope
+
+        // Limit speed on slope
         if (OnSlope() && !exitingSlope)
         {
             if (rb.velocity.magnitude > moveSpeed)
@@ -292,43 +296,49 @@ public class PlayerMovement : MonoBehaviour
                 rb.velocity = rb.velocity.normalized * moveSpeed;
             }
         }
-        //limiting speed on ground or in air
+        // Limit speed on ground or in air
         else
         {
             Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-            //limit velocity if needed
+            
+            // Limit velocity if needed
             if (flatVel.magnitude > moveSpeed)
             {
-                Vector3 limizedVel = flatVel.normalized * moveSpeed;
-                rb.velocity = new Vector3(limizedVel.x, rb.velocity.y, limizedVel.z);
+                Vector3 limitedVel = flatVel.normalized * moveSpeed;
+                rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
             } 
         }
     }
 
+    // Handle drag based on conditions
     private void DragHandler()
     {
         if (grounded && !activeGrapple)
+        {
             rb.drag = drag;
+        }
         else
         {
             rb.drag = 0;
         }
     }
 
+    // Handle jump
     private void Jump()
     {
         exitingSlope = true;
-        // reset y velocity
+        // Reset y velocity
         rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
-        
     }
 
+    // Reset jump state
     private void ResetJump()
     {
         exitingSlope = false;
         readyToJump = true;
     }
 
+    // Check if the player is on a slope
     private bool OnSlope()
     {
         if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f))
@@ -339,50 +349,56 @@ public class PlayerMovement : MonoBehaviour
 
         return false;
     }
-    
+
+    // Get the movement direction on a slope
     private Vector3 GetSlopeMoveDirection()
     {
         return Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
     }
-    
-    
-    
 
+    // Set wall running status
     public void SetWallRunning(bool status)
     {
         wallRunning = status;
     }
 
+    // Get wall running status
     public bool GetWallRunning()
     {
         return wallRunning;
     }
 
+    // Set swinging status
     public void SetSwinging(bool swing)
     {
         swinging = swing;
     }
 
+    // Get swinging status
     public bool GetSwinging()
     {
         return swinging;
     }
 
+    // Set freeze status
     public void SetFreeze(bool status)
     {
         freeze = status;
     }
 
+    // Set active grapple status
     public void SetActiveGrapple(bool status)
     {
         activeGrapple = status;
     }
 
+    // Get active grapple status
     public bool GetActiveGrapple()
     {
         return activeGrapple;
     }
-    
+
+    // Switch to swing mode input handler
     private void SwitchToSwingMode(InputAction.CallbackContext obj)
     {
         throwning.SetIsSwinging(true);
@@ -390,8 +406,10 @@ public class PlayerMovement : MonoBehaviour
         grap.SetIsThrowing(false);
         grapPoint.enabled = true;
         Debug.Log("Swinging Mode");
+        EventManager.SwitchToolTrigger(1);
     }
 
+    // Switch to throwing mode input handler
     private void SwitchToThrowing(InputAction.CallbackContext callbackContext)
     {
         Debug.Log("Throwing Mode");
@@ -399,6 +417,6 @@ public class PlayerMovement : MonoBehaviour
         swing.SetIsThrowing(true);
         grap.SetIsThrowing(true);
         grapPoint.enabled = false;
+        EventManager.SwitchToolTrigger(2);
     }
-    
 }

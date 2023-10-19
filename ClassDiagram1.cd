@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="BuildCamera">
+    <Position X="1" Y="0.5" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AQQAACAgACEEAAEEAAEAAECAAAGJgRgIAAAAAgBAiAk=</HashCode>
+      <FileName>Assets\Scipts\BuildCam\BuildCamera.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FlyingObjects">
+    <Position X="7" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scipts\BuildCam\FlyingObjects.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DragObject">
+    <Position X="5.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQEACAAAAQAAAAARAGCABAAAIAAlAAIIAAAAAAACEA=</HashCode>
+      <FileName>Assets\Scipts\BuildCam\DragObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DoorButton">
+    <Position X="11.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAACAABAAAAAAAAAAAAAAAAAAIQQAAAAAACAA=</HashCode>
+      <FileName>Assets\Scipts\FinishDoor\DoorButton.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FinishDoor">
+    <Position X="13" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAABAAAAAAARAEAAAAAAAAIAQAAAAAACAA=</HashCode>
+      <FileName>Assets\Scipts\FinishDoor\FinishDoor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThrowingTarget">
+    <Position X="14.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAABAAAAAAAAAAAAAAAAAAIQAAAAAAACAA=</HashCode>
+      <FileName>Assets\Scipts\FinishDoor\ThrowingTarget.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HighscoreDownloader">
+    <Position X="11.25" Y="3.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="HighscoreDownloader.HighscoreEntry" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scipts\Highscore\HighscoreDownloader.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIACAAAgAAAAAQAABCAAAAAEAAEAEAAAAAAAE=</HashCode>
+      <FileName>Assets\Scipts\Highscore\HighscoreDownloader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HighscoreManager">
+    <Position X="13" Y="3.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="HighscoreManager.HighscoreEntry" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scipts\Highscore\HighScoreManager.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAABAAAAAAAQABAAAAAAAAQAAAAAAAAAAAEA=</HashCode>
+      <FileName>Assets\Scipts\Highscore\HighScoreManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HighscoreSender">
+    <Position X="14.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAQAAAAAAACAAAAIAAEAAAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scipts\Highscore\HighscoreSender.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventManager">
+    <Position X="17.25" Y="0.75" Width="1.5" />
+    <NestedTypes>
+      <Delegate Name="EventManager.ButtonPressAction" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scipts\ManagerScripts\EventManager.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="EventManager.SpikeButtonPressAction" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scipts\ManagerScripts\EventManager.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="EventManager.ResetAllDoorTrigger" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scipts\ManagerScripts\EventManager.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="EventManager.LevelEndedAction" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scipts\ManagerScripts\EventManager.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="EventManager.SwitchToolAction" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scipts\ManagerScripts\EventManager.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAgAEAAAAAAAAAAAAQAEAAAAAASAIAAEAAAABCAAAA=</HashCode>
+      <FileName>Assets\Scipts\ManagerScripts\EventManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Finish">
+    <Position X="19" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAABAAAAAAAAAAAAAAAAABQAIAAAAAAAA=</HashCode>
+      <FileName>Assets\Scipts\ManagerScripts\Finish.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HighscoreButton">
+    <Position X="19" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAACIAEAAgAAAAAAA=</HashCode>
+      <FileName>Assets\Scipts\ManagerScripts\HighscoreButton.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SceneLoader">
+    <Position X="17.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAACABAAAAAAAAAAAQAAAgAAAAAAA=</HashCode>
+      <FileName>Assets\Scipts\ManagerScripts\SceneLoader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SwitchCams">
+    <Position X="19" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAIAAAEAAAAAAAAACAAAQEAYAACgKAAIAAACACQg=</HashCode>
+      <FileName>Assets\Scipts\ManagerScripts\SwitchCams.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Timer">
+    <Position X="17.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQQAAAAAIAAAgAAAAAAAAAAIAQBAAACAAAAQAgAAAAE=</HashCode>
+      <FileName>Assets\Scipts\ManagerScripts\Timer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="IDrag">
+    <Position X="7" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scipts\BuildCam\IDrag.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

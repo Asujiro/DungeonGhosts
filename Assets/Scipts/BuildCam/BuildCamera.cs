@@ -3,55 +3,57 @@ using UnityEngine.InputSystem;
 
 public class BuildCamera : MonoBehaviour
 {
-    
-    [SerializeField] private float _mouseSense = 1.8f;
-    [SerializeField] private float _movementSpeed = 10f;
-    [SerializeField] private float _boostedSpeed = 50f;
-    [SerializeField] private KeyCode _boostSpeed = KeyCode.LeftShift;
-    [SerializeField] private bool _enableSpeedAcceleration = true;
-    [SerializeField] private float _speedAccelerationFactor = 1.5f;
-    [SerializeField] private KeyCode _initPositonButton = KeyCode.R;
-    
-    private CursorLockMode _wantedMode;
-    private float _currentIncrease = 1;
-    private float _currentIncreaseMem = 0;
-    private Vector3 _initPosition;
-    private Vector3 _initRotation;
+    [SerializeField] private float mouseSense = 1.8f;
+    [SerializeField] private float movementSpeed = 10f;
+    [SerializeField] private float boostedSpeed = 50f;
+    [SerializeField] private bool enableSpeedAcceleration = true;
+    [SerializeField] private float speedAccelerationFactor = 1.5f;
+
+    private float currentIncrease = 1;
+    private float currentIncreaseMem = 0;
+    private Vector3 initPosition;
+    private Vector3 initRotation;
     private Vector3 moveDirection;
-    
-    [Header("Input")] 
-    [SerializeField] private InputActionReference movementControl;
-    [SerializeField] private InputActionReference camRotationControl;
-    [SerializeField] private InputActionReference mouse;
+
+    [Header("Input")]
+    [SerializeField] private InputAction movementControl;
+    [SerializeField] private InputAction camRotationControl;
+    [SerializeField] private InputAction mouse;
+    [SerializeField] private InputAction resetCamButton;
+    [SerializeField] private InputAction boostSpeed;
     private Vector2 movement;
     private float verticalInput;
     private float horizontalInput;
-    
-    
-    
+
     private bool lockMouse;
-
-
 
     private void Start()
     {
-        _initPosition = transform.position;
-        _initRotation = transform.eulerAngles;
+        // Initialize initial position and rotation
+        initPosition = transform.position;
+        initRotation = transform.eulerAngles;
     }
 
     private void OnEnable()
-    {   
-        camRotationControl.action.Enable();
-        movementControl.action.Enable();
-        mouse.action.Enable();
-        
+    {
+        // Enable input actions and attach event handler for camera reset
+        boostSpeed.Enable();
+        resetCamButton.Enable();
+        camRotationControl.Enable();
+        movementControl.Enable();
+        mouse.Enable();
+        resetCamButton.performed += ResetCam;
     }
-    
+
     private void OnDisable()
     {
-        camRotationControl.action.Enable();
-        movementControl.action.Disable();
-        mouse.action.Enable();
+        // Disable input actions and detach event handler
+        boostSpeed.Disable();
+        resetCamButton.Disable();
+        camRotationControl.Enable();
+        movementControl.Disable();
+        mouse.Enable();
+        resetCamButton.performed -= ResetCam;
     }
 
     // Apply requested cursor state
@@ -60,97 +62,86 @@ public class BuildCamera : MonoBehaviour
         switch (lockMouse)
         {
             case false:
-                Cursor.lockState = _wantedMode = CursorLockMode.None;
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
                 break;
             case true:
-                _wantedMode = CursorLockMode.Locked;
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
                 break;
         }
-        // Apply cursor state
-        Cursor.lockState = _wantedMode;
-        // Hide cursor when locking
-        Cursor.visible = (CursorLockMode.Locked != _wantedMode);
     }
 
+    // Calculate current increase for movement speed
     private void CalculateCurrentIncrease(bool moving)
     {
-        _currentIncrease = Time.deltaTime;
+        currentIncrease = Time.deltaTime;
 
-        if (!_enableSpeedAcceleration || _enableSpeedAcceleration && !moving)
+        if (!enableSpeedAcceleration || enableSpeedAcceleration && !moving)
         {
-            _currentIncreaseMem = 0;
+            currentIncreaseMem = 0;
             return;
         }
 
-        _currentIncreaseMem += Time.deltaTime * (_speedAccelerationFactor - 1);
-        _currentIncrease = Time.deltaTime + Mathf.Pow(_currentIncreaseMem, 3) * Time.deltaTime;
+        currentIncreaseMem += Time.deltaTime * (speedAccelerationFactor - 1);
+        currentIncrease = Time.deltaTime + Mathf.Pow(currentIncreaseMem, 3) * Time.deltaTime;
     }
 
     private void Update()
     {
         SetCursorState();
-        
-        // Movement
-            CamMovement();
-        
-
-        // Rotation
-            CamRotation();
-
-        // Return to init position
-        if (Input.GetKeyDown(_initPositonButton))
-        {
-            transform.position = _initPosition;
-            transform.eulerAngles = _initRotation;
-        }
+        CamMovement();
+        CamRotation();
     }
 
     private void CamMovement()
     {
-        float currentSpeed = _movementSpeed;
+        float currentSpeed = movementSpeed;
 
-        if (Input.GetKey(_boostSpeed))
-            currentSpeed = _boostedSpeed;
-            
-        movement = movementControl.action.ReadValue<Vector2>();
+        if (boostSpeed.inProgress)
+            currentSpeed = boostedSpeed;
+
+        // Read movement input
+        movement = movementControl.ReadValue<Vector2>();
         horizontalInput = movement.x;
         verticalInput = movement.y;
-            
+
+        // Calculate movement direction
         moveDirection = transform.forward * verticalInput + transform.right * horizontalInput;
-            
-           
-        // Calc acceleration
+
+        // Calculate acceleration
         CalculateCurrentIncrease(moveDirection != Vector3.zero);
 
-        if (moveDirection != Vector3.zero)
-        {
-            lockMouse = true;
-        }
-        else
-        {
-            lockMouse = false;
-        }
-            
-            
-        transform.position += moveDirection * currentSpeed * _currentIncrease;
+        // Determine if mouse should be locked based on movement
+        lockMouse = moveDirection != Vector3.zero;
+
+        // Apply movement
+        transform.position += moveDirection * currentSpeed * currentIncrease;
     }
 
     private void CamRotation()
     {
-        if (lockMouse || camRotationControl.action.inProgress)
+        if (lockMouse || camRotationControl.inProgress)
         {
-            // Pitch
+            // Pitch (up and down)
             transform.rotation *= Quaternion.AngleAxis(
-                -mouse.action.ReadValue<Vector2>().y * _mouseSense * Time.deltaTime,
+                -mouse.ReadValue<Vector2>().y * mouseSense * Time.deltaTime,
                 Vector3.right
             );
 
-            // Paw
+            // Yaw (left and right)
             transform.rotation = Quaternion.Euler(
                 transform.eulerAngles.x,
-                transform.eulerAngles.y + mouse.action.ReadValue<Vector2>().x * _mouseSense * Time.deltaTime,
+                transform.eulerAngles.y + mouse.ReadValue<Vector2>().x * mouseSense * Time.deltaTime,
                 transform.eulerAngles.z
             );
         }
+    }
+
+    private void ResetCam(InputAction.CallbackContext callbackContext)
+    {
+        // Reset camera position and rotation to initial values
+        transform.position = initPosition;
+        transform.eulerAngles = initRotation;
     }
 }
