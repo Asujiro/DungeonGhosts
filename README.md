@@ -1,2 +1,2 @@
 # GameProgGame
-Spiel für den GameProg Beleg 
+Dieses Spiel ist im Rahmen des Moduls Gameprogramming entstanden
